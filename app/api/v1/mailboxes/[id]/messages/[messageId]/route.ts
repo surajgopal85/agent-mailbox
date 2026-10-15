@@ -3,6 +3,8 @@ import { mailboxes, messages } from "@/db/schema";
 import { and, eq, isNull, gt } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { extractVerificationCodes } from "@/lib/extraction/extractVerificationCode";
+import { extractVerificationLinks } from "@/lib/extraction/extractVerificationLinks";
 
 function isValidUUID(str: string) {
   const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -79,12 +81,21 @@ export async function GET(
                 { status: 502 }
             );
         }
+        const text = data.text ?? "";
+
+        const parsedCodes = extractVerificationCodes(text);
+        const parsedLinks = extractVerificationLinks(text);
+
         return Response.json({
             message: mailboxMessage,
             content: {
                 subject: data.subject,
                 text: data.text,
                 html: data.html
+            },
+            extraction: {
+                codes: parsedCodes,
+                links: parsedLinks,
             }
         });
     } catch (error) {

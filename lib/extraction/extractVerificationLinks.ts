@@ -1,4 +1,4 @@
-function extractVerificationLinks(text: string): string[] {
+export function extractVerificationLinks(text: string): string[] {
     const regex: RegExp = /https?:\/\/[^\s]+/g;
     const matches = text.match(regex);
     const urlMatches: string[] = [];
@@ -27,11 +27,11 @@ function extractVerificationLinks(text: string): string[] {
     return urlMatches;
 }
 
-const text = `
-Verify: https://example.com/verify?token=abc123.
-Confirm: https://example.com/Confirm
-Broken: https://
-Homepage: https://example.com
-`;
+// const text = `
+// Verify: https://example.com/verify?token=abc123.
+// Confirm: https://example.com/Confirm
+// Broken: https://
+// Homepage: https://example.com
+// `;
 
-console.log(extractVerificationLinks(text));
+// console.log(extractVerificationLinks(text));
